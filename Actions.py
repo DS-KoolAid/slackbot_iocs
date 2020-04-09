@@ -11,17 +11,20 @@ class Actions:
         if "files" in message_txt:
             self.files=message_txt['files']
     
-    def addioc(tc_url):
+    def addioc(self,tc_url):
         pos1=self.text.find('`')
         pos2=self.text.find('`',pos1+1)
         ioc=self.text[pos1+1:pos2]
-        res=req.post(tc_url,data=ioc)
-        if res.status_code==200:
-            return True
-        else:
-            return False
+        if "[.]" in ioc:
+            ioc=ioc.replace("[.]",".")
+        # res=req.post(tc_url,data=ioc)
+        print (ioc)
+        # if res.status_code==200:
+        #     return True
+        # else:
+        #     return False
 
-    def bulkadd(tc_url,token):
+    def bulkadd(self,tc_url,token):
         f=self.files
         iocs=""
         file_down_fail=False
