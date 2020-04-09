@@ -52,7 +52,7 @@ def message(event_data):
                 "type":"section",
                 "text": {
                     "type":"mrkdwn",
-                    "text":"Here are the commands we currently support \n\n`help`\n\n```addioc `<domain>` ```\n\n`bulkadd (attach text file with domains to this message)`\n"
+                    "text":"Here are the commands we currently support \n\n`help`\n\n`` addioc `<domain>` ``\n\n`bulkadd (attach text file with domains to this message)`\n"
                 }
 
             }])
