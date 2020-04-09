@@ -8,9 +8,9 @@ import logging
 import enviroment
 from Actions import Actions
 
-app = Flask(__name__)
+application = Flask(__name__)
 
-slack_events_adapter=SlackEventAdapter(enviroment.SECRET,"/slack/events",app)
+slack_events_adapter=SlackEventAdapter(enviroment.SECRET,"/slack/events",application)
 
 token=enviroment.TOKEN
 
@@ -66,4 +66,4 @@ if __name__ == "__main__":
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
-    app.run(port=3000,host='0.0.0.0')
+    application.run(port=5000,host='0.0.0.0')
