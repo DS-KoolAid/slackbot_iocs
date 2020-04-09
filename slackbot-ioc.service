@@ -1,0 +1,13 @@
+[Unit]
+Description=IOC Slackbot
+After=network.target
+
+[Service]
+Type=simple
+User=Matt
+WorkingDirectory=/opt/slackbot_iocs/
+ExecStart=/bin/bash /opt/slackbot_iocs/run-server.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
