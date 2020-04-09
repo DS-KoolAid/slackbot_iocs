@@ -17,12 +17,11 @@ class Actions:
         ioc=self.text[pos1+1:pos2]
         if "[.]" in ioc:
             ioc=ioc.replace("[.]",".")
-        # res=req.post(tc_url,data=ioc)
-        print (ioc)
-        # if res.status_code==200:
-        #     return True
-        # else:
-        #     return False
+        res=req.post(tc_url,data=ioc)
+        if res.status_code==200:
+            return True
+        else:
+            return False
 
     def bulkadd(self,tc_url,token):
         f=self.files
