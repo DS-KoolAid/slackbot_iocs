@@ -19,8 +19,9 @@ slack_client=WebClient(token)
 domain_tc_endpoint=enviroment.DOMAIN_TC
 
 @slack_events_adapter.on("app_mention")
-@slack_events_adapter.on("message.app_home")
+# @slack_events_adapter.on("message")
 def message(event_data):
+    print(event_data)
     message_txt=event_data["event"]
     act=Actions(message_txt)
     # resp=response(message_txt['channel'],message_txt['user'])
