@@ -19,9 +19,7 @@ slack_client=WebClient(token)
 domain_tc_endpoint=enviroment.DOMAIN_TC
 
 @slack_events_adapter.on("app_mention")
-# @slack_events_adapter.on("message")
 def message(event_data):
-    print(event_data)
     message_txt=event_data["event"]
     act=Actions(message_txt)
     # resp=response(message_txt['channel'],message_txt['user'])
@@ -33,7 +31,7 @@ def message(event_data):
             slack_client.chat_postMessage(channel=message_txt['channel'],text='Error submitting IOC')
         #send request
     elif "bulkad" == act.command or "bulkadd"==act.command:
-        succ=act.men.bulkadd(enviroment.DOMAIN_TC,token)
+        succ=act.bulkadd(enviroment.DOMAIN_TC,token)
         if succ:
             slack_client.chat_postMessage(channel=message_txt['channel'],text='IOC was submitted!')
         else:
@@ -64,7 +62,7 @@ def message(event_data):
 
 
 if __name__ == "__main__":
-    logger = logging.getLogger()
+    logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
