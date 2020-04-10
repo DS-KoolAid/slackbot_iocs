@@ -3,7 +3,7 @@ import logging
 import string
 
 logger=logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler())
 
 
@@ -14,7 +14,6 @@ class Actions:
 
     def __init__(self,message_txt):
         self.text=message_txt.get('text')
-        logger.debug('Original Text: '+self.text)
         c_pos=self.text.find(' ')
         c_pos2=self.text.find(' ',c_pos+1)
         if c_pos2==(-1):
