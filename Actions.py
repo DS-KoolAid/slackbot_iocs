@@ -1,6 +1,7 @@
 import requests as req
 import logging
 import string
+import re
 
 logger=logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -13,28 +14,29 @@ def format_domains(ioc):
 class Actions:
 
     def __init__(self,message_txt):
-        self.text=message_txt.get('text')
-        c_pos=self.text.find(' ')
-        c_pos2=self.text.find(' ',c_pos+1)
-        if c_pos2==(-1):
-            c_pos2=len(self.text)
-        self.command = self.text[c_pos+1:c_pos2]
-        self.command_end_pos=c_pos2
+        self.message=message_txt
+        self.text=message_txt.get('blocks')[0].get('elements')[0].get('elements')[1].get('text')
+        logger.debug(message_txt.get('elements'))
+        if "addioc" in self.text:
+            self.command= "addioc"
+        elif "bulkadd" in self.text:
+            self.command="bulkadd"
+        elif "hi" in self.text or "help" in self.text or "hello" in self.text:
+            self.command="help"
+        else:
+            self.command="unknown"
         logger.debug('COMMAND: '+self.command)
         if "files" in message_txt:
             self.files=message_txt['files']
     
     def addioc(self,tc_url):
-        pos1=self.text.find('<',self.command_end_pos)
-        pos2=self.text.find('>',self.command_end_pos)
-        ioc=self.text[pos1+1:pos2]
+        ioc=self.message.get('blocks')[0].get('elements')[0].get('elements')[2].get('url')
         if "[.]" in ioc:
             ioc=ioc.replace("[.]",".")
         ioc=ioc.strip('<')
         ioc=ioc.strip('>')
-        tc_sub='['+format_domains(ioc)+']'
-        logger.debug("IOC: "+str(tc_sub))
-        res=req.post(tc_url,data=tc_sub)
+        logger.debug("IOC: "+ioc)
+        res=req.post(tc_url,data=ioc)
         if res.status_code==200:
             return True
         else:
@@ -53,22 +55,16 @@ class Actions:
                 return False
         logger.debug('IOCS:\n'+iocs)
         ioc_array=iocs.split('\n')
-        tc_sub='['
+        if file_down_fail:
+            return False
         count=0
         for i in ioc_array:
-            if count==len(ioc_array)-1:
-                tc_sub+=format_domains(i)
-            else:
-                tc_sub+=format_domains(i)+','
-            count+=1
-        tc_sub+=']'
-        logger.info('IOC COUNT: '+str(count))
-        logger.debug('IOC SUBMISSION:\n'+str(tc_sub))
-        if file_down_fail==False:
-            res=req.post(tc_url,data=tc_sub)
-            if res.status_code==200:
-                return True
-            else:
+            logger.debug("IOC: "+i)
+            res=req.post(tc_url,data=i)
+            if res.status_code!=200:
                 return False
+            count+=1
+        logger.info('IOC COUNT: '+str(count))
+        return True
 
 
