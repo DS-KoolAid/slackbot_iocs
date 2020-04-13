@@ -16,12 +16,13 @@ def format_domains(ioc):
 
 class Actions:
 
-    def __init__(self,message_txt):
+    def __init__(self,message_txt,text):
         self.message=message_txt
         self.channel=message_txt['channel']
         self.user=message_txt['user']
-        self.text=message_txt.get('blocks')[0].get('elements')[0].get('elements')[1].get('text')
-        logger.debug(message_txt.get('elements'))
+        self.text=text
+        # self.text=message_txt.get('blocks')[0].get('elements')[0].get('elements')[1].get('text')
+        # logger.debug(message_txt.get('elements'))
         if "addioc" in self.text:
             self.command= "addioc"
         elif "bulkadd" in self.text:
@@ -36,8 +37,7 @@ class Actions:
         if "files" in message_txt:
             self.files=message_txt['files']
     
-    def addioc(self,tc_url):
-        ioc=self.message.get('blocks')[0].get('elements')[0].get('elements')[2].get('url')
+    def addioc(self,tc_url,ioc):
         if "[.]" in ioc:
             ioc=ioc.replace("[.]",".")
         ioc=ioc.strip('<')
