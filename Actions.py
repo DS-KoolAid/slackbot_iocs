@@ -2,6 +2,9 @@ import requests as req
 import logging
 import string
 import re
+import responses
+import enviroment
+
 
 logger=logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -15,6 +18,8 @@ class Actions:
 
     def __init__(self,message_txt):
         self.message=message_txt
+        self.channel=message_txt['channel']
+        self.user=message_txt['user']
         self.text=message_txt.get('blocks')[0].get('elements')[0].get('elements')[1].get('text')
         logger.debug(message_txt.get('elements'))
         if "addioc" in self.text:
@@ -23,8 +28,10 @@ class Actions:
             self.command="bulkadd"
         elif "hi" in self.text or "help" in self.text or "hello" in self.text:
             self.command="help"
+            responses.send_help(self.channel,self.user)
         else:
             self.command="unknown"
+            responses.send_unknown(channel)
         logger.debug('COMMAND: '+self.command)
         if "files" in message_txt:
             self.files=message_txt['files']
@@ -38,33 +45,33 @@ class Actions:
         logger.debug("IOC: "+ioc)
         res=req.post(tc_url,data=ioc)
         if res.status_code==200:
-            return True
+            responses.send_success_message(self.channel)
         else:
-            return False
+            responses.send_failure(self.channel)
     
-    def bulkadd(self,tc_url,token):
+    def bulkadd(self,tc_url):
         f=self.files
         iocs=""
         file_down_fail=False
         for i in f:
             logger.debug('URL DOWNLOAD: '+i['url_private_download'])
-            res=req.get(i['url_private_download'], headers={"Authorization": "Bearer "+token})
-            iocs+=res.text
-            
+            res=req.get(i['url_private_download'], headers={"Authorization": "Bearer "+enviroment.TOKEN})
+            if res.text not in iocs:
+                iocs+=res.text
             if res.status_code!=200:
-                return False
-        logger.debug('IOCS:\n'+iocs)
+                responses.send_failure(self.channel)
+                return
         ioc_array=iocs.split('\n')
-        if file_down_fail:
-            return False
+        logger.debug('Attempting to submit '+str(len(ioc_array))+' IOCS...')
+        responses.send_ioc_count(self.channel,len(ioc_array))
         count=0
         for i in ioc_array:
-            logger.debug("IOC: "+i)
             res=req.post(tc_url,data=i)
             if res.status_code!=200:
-                return False
+                logger.debug("Upload Failure:\n"+res.text)
+                responses.send_failure(self.channel)
+                return
             count+=1
-        logger.info('IOC COUNT: '+str(count))
-        return True
-
+        logger.debug('Number of IOCs submitted: '+str(count))
+        responses.send_success_message(self.channel)
 
