@@ -47,6 +47,10 @@ For convenience sake, lets install this as a service.
 
 `sudo systemctl daemon-reload`
 
+### Configure your enviroment variables
+
+Modify the enviroment variables in `enviroment.py` for your needs. 
+
 ## Run the Application
 
 `sudo systemctl start slackbot-ioc.service`
