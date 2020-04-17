@@ -8,6 +8,6 @@ source env/bin/activate
 
 pip3 install wheel
 
-pip3 install requests, slackeventsapi, slackclient, gunicorn
+pip3 install requests, slackeventsapi, slackclient, gunicorn, flask, certifi
 
 deactivate
