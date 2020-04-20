@@ -6,6 +6,7 @@ import ssl as ssl_lib
 import logging
 import environment
 from Actions import Action
+from pprint import pformat
 import responses
 
 application = Flask(__name__)
@@ -29,8 +30,8 @@ def parse_event(event):
     # Ignore messages from the bot
     if 'bot_id' in event['event']:
         return
-
-    pprint.pprint(event)
+    logger.debug(pformat(event))
+    # pprint.pprint(event)
     logger.debug('----------------------------------------------------------')
 
     channel = event['event']['channel']
@@ -65,7 +66,8 @@ def parse_event(event):
 
     if 'files' in event['event']:
         data['files'] = event['event']['files']
-    pprint.pprint(data)
+    logger.debug(pformat(data))
+    # pprint.pprint(data)
 
 
     action = Action(**data)
