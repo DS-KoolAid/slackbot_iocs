@@ -12,6 +12,9 @@ application = Flask(__name__)
 slack_events_adapter=SlackEventAdapter(environment.SECRET,'/slack/events',application)
 domain_tc_endpoint=environment.DOMAIN_TC
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler())
 
 class IOCSlackBot:
 
@@ -70,9 +73,5 @@ def parse_event(event):
 
 
 if __name__ == '__main__':
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(logging.StreamHandler())
-
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
     application.run(port=5000, host='0.0.0.0')
