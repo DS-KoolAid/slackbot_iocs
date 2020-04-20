@@ -57,7 +57,7 @@ class Action:
             logger.debug('IOC: '+ioc)
 
             res = req.post(tc_url, data=ioc)
-            if res.status_code == req.status_codes.codes.okay:
+            if res.ok:
                 responses.send_success_message(self._channel)
             else:
                 responses.send_failure(self._channel)
@@ -74,7 +74,7 @@ class Action:
             if res.text not in iocs:
                 iocs += res.text
 
-            if res.status_code != req.status_codes.codes.okay:
+            if res.ok:
                 responses.send_failure(self._channel)
                 return
 
@@ -88,7 +88,7 @@ class Action:
 
         for i in ioc_array:
             res = req.post(tc_url, data=i)
-            if res.status_code != req.status_codes.codes.okay:
+            if res.ok:
                 logger.debug(f'Upload Failure:\n {res.text}')
                 responses.send_failure(self._channel)
                 return
@@ -100,7 +100,7 @@ class Action:
 
 
     def _falsepositive(self):
-        tc_url = environment.DOMAIN_TC
+        tc_url = environment.FALSE_POSITIVE_THREAT_CONNECT
 
         for fp_ioc in self._command_arguments:
             if '[.]' in fp_ioc:
@@ -116,9 +116,8 @@ class Action:
             }
 
             logger.debug(f'False PositiveIOC: {json.dumps(data)}')
-            responses.send_message_to_slack(self._channel, 'False Positive was submitted!')
-            # res=req.post(data=ioc)
-            # if res.status_code==200:
-            #     responses.send_success_message(self._channel)
-            # else:
-            #     responses.send_failure(self._channel)
+            res=req.post(tc_url, json=data)
+            if res.ok:
+                responses.send_message_to_slack(self._channel, 'False Positive was submitted!')
+            else:
+                responses.send_message_to_slack(self._channel, f'Failed to submit false positive. Received status code {res.status_code}')
