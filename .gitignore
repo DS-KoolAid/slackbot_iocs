@@ -1,3 +1,4 @@
 .vscode
 Pipfile*
 environment.py
+*.json
