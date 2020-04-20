@@ -26,12 +26,10 @@ class IOCSlackBot:
 @slack_events_adapter.on('app_mention')
 @slack_events_adapter.on('message')
 def parse_event(event):
-    import pprint
     # Ignore messages from the bot
     if 'bot_id' in event['event']:
         return
     logger.debug(pformat(event))
-    # pprint.pprint(event)
     logger.debug('----------------------------------------------------------')
 
     channel = event['event']['channel']
@@ -67,8 +65,6 @@ def parse_event(event):
     if 'files' in event['event']:
         data['files'] = event['event']['files']
     logger.debug(pformat(data))
-    # pprint.pprint(data)
-
 
     action = Action(**data)
     action.execute()
