@@ -4,6 +4,7 @@ import string
 import re
 import json
 import responses
+import time
 import environment
 
 logger=logging.getLogger(__name__)
@@ -78,6 +79,9 @@ class Action:
                 return
 
         ioc_array = iocs.split('\n')
+        if len(ioc_array)>100:
+            responses.send_message_to_slack(self._channel, 'Due to limitations at the current time, we are only allowing 100 IOCs to be pushed at once. Sorry for the inconvience.')
+            return
         logger.debug(f'Attempting to submit {str(len(ioc_array))} IOCS...')
         responses.send_ioc_count(self._channel,len(ioc_array))
         count=0
@@ -89,6 +93,7 @@ class Action:
                 responses.send_failure(self._channel)
                 return
             count += 1
+            time.sleep(10)
 
         logger.debug(f'Number of IOCs submitted: {str(count)}')
         responses.send_success_message(self._channel)

@@ -19,43 +19,6 @@ class IOCSlackBot:
         self._channel = None
         self._user = None
 
-    # @slack_events_adapter.on('app_mention')
-    # def app_mention(event_data):
-    #     message_txt = event_data['event']
-    #     logger.debug("WOW")
-    #     logger.debug(message_txt)
-    #     text = message_txt.get('blocks')[0].get('elements')[0].get('elements')[1].get('text')
-    #     act = Actions(message_txt,text)
-    #     if 'addioc' == act.command or 'addio' == act.command:
-    #         ioc = message_txt.get('blocks')[0].get('elements')[0].get('elements')[2].get('url')
-    #         act.addioc(environment.DOMAIN_TC, ioc)
-    #     elif 'bulkad' == act.command or 'bulkadd' == act.command:
-    #         act.bulkadd(environment.DOMAIN_TC)
-    #     elif 'falsepositive' == act.command:
-    #         # TODO pass Threat connect endpoint
-    #         fp_ioc = message_txt.get('blocks')[0].get('elements')[0].get('elements')[2].get('url')
-    #         act.falsepositive(fp_ioc)
-
-
-    # @slack_events_adapter.on('message')
-    # def message(event_data):
-    #     message_txt = event_data['event']
-    #     logger.debug("MOM")
-    #     logger.debug(event_data)
-    #     if 'bot_id' not in message_txt:
-    #         text = message_txt.get('blocks')[0].get('elements')[0].get('elements')[0].get('text')
-    #         act = Actions(message_txt,text)
-    #         # resp = response(message_txt['channel'],message_txt['user'])
-    #         if 'addioc' == act.command or 'addio' == act.command:
-    #             ioc = message_txt.get('blocks')[0].get('elements')[0].get('elements')[1].get('url')
-    #             act.addioc(environment.DOMAIN_TC, ioc)
-    #         elif 'bulkad' == act.command or 'bulkadd' == act.command:
-    #             act.bulkadd(environment.DOMAIN_TC)
-    #         elif 'falsepositive' == act.command:
-    #             # TODO pass Threat connect endpoint
-    #             fp_ioc = message_txt.get('blocks')[0].get('elements')[0].get('elements')[1].get('url')
-    #             act.falsepositive(fp_ioc)
-
 @slack_events_adapter.on('app_mention')
 @slack_events_adapter.on('message')
 def parse_event(event):
