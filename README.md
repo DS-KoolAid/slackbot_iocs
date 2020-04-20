@@ -47,9 +47,9 @@ For convenience sake, lets install this as a service.
 
 `sudo systemctl daemon-reload`
 
-### Configure your enviroment variables
+### Configure your environment variables
 
-Modify the enviroment variables in `enviroment.py` for your needs. 
+Modify the environment variables in `environment.py` for your needs. 
 
 ## Run the Application
 

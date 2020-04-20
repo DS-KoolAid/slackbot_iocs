@@ -1,10 +1,14 @@
 from slack import WebClient
 
-import enviroment
+import environment
 
-token=enviroment.TOKEN
+token=environment.TOKEN
 
 slack_client=WebClient(token)
+
+
+def send_message_to_slack(channel, text):
+    slack_client.chat_postMessage(channel=channel,text=text)
 
 def send_success_message(channel):
     slack_client.chat_postMessage(channel=channel,text='IOC was submitted!')
@@ -13,7 +17,7 @@ def send_failure(channel):
     slack_client.chat_postMessage(channel=channel,text='Error submitting IOC')
 
 def send_ioc_count(channel,count):
-    slack_client.chat_postMessage(channel=channel,text='Attempting to submit '+str(count)+' IOCs')
+    slack_client.chat_postMessage(channel=channel,text=f'Attempting to submit {str(count)} IOCs')
 
 
 def send_unknown(channel):
@@ -35,7 +39,12 @@ def send_help(channel,user):
                 "type":"section",
                 "text": {
                     "type":"mrkdwn",
-                    "text":"Here are the commands we currently support \n\n```help```\n\n```addioc `<domain>` ```\n\n```bulkadd (attach text file with domains to this message)```\n"
+                    "text":"""Here are the commands we currently support
+                    ```help```
+                    ```addioc `<domain>` ```
+                    ```bulkadd (attach text file with domains to this message)```
+                    ```falsepositive `<domain>` ```
+                    """
                 }
 
             }])
