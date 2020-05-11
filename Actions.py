@@ -43,7 +43,9 @@ class Action:
         if 'URL' in self._command_arguments:
             db_conn=DBActions()
             ioc_type='URL'
-            ioc = req.get('THREATCONNECT ENDPOINT')
+            # ioc = req.get('THREATCONNECT ENDPOINT')
+            ioc='hxxp://ThisIsATestIOC.com/PleaseIgnore'
+            responses.send_IOC
             db_conn.add_to_tracker(self._user,ioc_type,ioc)
         else:
             responses.send_message_to_slack(self._channel,'We are sorry, but we currently only support URLs for the queue')
@@ -51,6 +53,10 @@ class Action:
     def _checkIOCs(self):
         db_conn=DBActions()
         iocs=db_conn.get_user_iocs(self._user)
+        if not iocs:
+            responses.send_message_to_slack(self._channel, "You do not have any IOCs assigned to you at this time")
+        else:
+            responses.send_ioc_list(self._channel,iocs)
 
 
 

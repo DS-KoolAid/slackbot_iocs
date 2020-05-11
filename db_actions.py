@@ -11,7 +11,7 @@ config = configparser.ConfigParser()
 
 config.read('db.ini')
 
-conn_string = f"host = '{config['DBConfig']['HOST']}' dbname='{config['DBConfig']['DB']}' user='{config['DBConfig']['USER']}' password='{config['DBConfig']['PASSWORD']}'"
+conn_string = f"host={config['DBConfig']['HOST']} dbname={config['DBConfig']['DB']} user={config['DBConfig']['USER']} password={config['DBConfig']['PASSWORD']}"
 
 class DBActions:
 
@@ -27,26 +27,37 @@ class DBActions:
         logger.debug(f'SQL ERROR:\n{error_message}')
         self.conn.rollback()
 
+    def _sanitize(s):
+        s=s.trim(' ')
+        s=s.trim('/**/')
+        s=s.trim("'")
+        s=s.trim('"')
+
 
     def add_to_tracker(self,user,ioc,ioc_type):
-        self.cursor = conn.cursor()
-        date = date.today()
-        query=f"INSERT INTO {config['DBConfig']['TRACKER_TABLE']}(NAME, IOC_TYPE, IOC, TIME) VALUES ({user}, {ioc_type}, {ioc}, {date}"
+        table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
+        ioc=self._sanitize(ioc)
+        query=f"INSERT INTO {table_name}(NAME, IOC_TYPE, IOC, TIME) VALUES ('{user}', '{ioc_type}', '{ioc}', '{date.today()}')"
         try:
             self.cursor.execute(query)
+            self.conn.commit()
         except Exception as err:
             self._handle_error(err)
         self._exit()
 
     def get_user_iocs(self,user):
-        self.cursor = conn.cursor()
-        query = f"SELECT IOC_TYPE, IOC FROM {config['DBConfig']['TRACKER_TABLE']} WHERE NAME = {user}"
+        table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
+        query = f"SELECT IOC_TYPE, IOC, TIME FROM {table_name} WHERE NAME = '{user}'"
         try:
             self.cursor.execute(query)
             records = self.cursor.fetchall()
             self._exit()
-            return records
+            rec_array=[]
+            for i in records:
+                rec={'IOC_type':i[0], 'IOC': i[1], 'TIME': i[2]}
+                rec_array.append(rec)
+            return rec_array
         except Exception as err:
             self._handle_error(err)
             self._exit()
-            return 'DATABASE ERROR - IF THIS PERSISTS PLEASE CONTACT SLACKBOT SUPPORT'
+            return [{}]

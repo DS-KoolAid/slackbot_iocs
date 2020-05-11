@@ -23,6 +23,14 @@ def send_ioc_count(channel,count):
 def send_unknown(channel):
     slack_client.chat_postMessage(channel=channel,text='Sorry I do not understand your command, try asking me for help to see avaliable commands')
 
+def send_ioc_list(channel,ioc_array):
+    message="IOCs:\n"
+    for i in ioc_array:
+        message+=f"IOC Type: {i['type']}\tIOC: {i['ioc']}\n"
+    slack_client.chat_postMessage(channel=channel,text=message)
+    
+
+
 def send_help(channel,user):
      slack_client.chat_postMessage(channel=channel,blocks=[
             {
