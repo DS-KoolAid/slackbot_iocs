@@ -6,13 +6,12 @@ import json
 import responses
 import time
 import environment
+from db_actions import DBActions
 
 logger=logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler())
 
-# def format_domains(ioc):
-#         return f'{'url':''+ioc+''}'
 
 class Action:
 
@@ -33,8 +32,26 @@ class Action:
             self._falsepositive()
         elif self._command == 'bulkadd':
             self._bulkadd()
+        elif self._command == 'getIOCFromQueue':
+            self._getIOC()
+        elif self._command == 'checkMyIOCs':
+            self._checkIOCs()
         else:
             self._unknown_command()
+
+    def _getIOC(self):
+        if 'URL' in self._command_arguments:
+            db_conn=DBActions()
+            ioc_type='URL'
+            ioc = req.get('THREATCONNECT ENDPOINT')
+            db_conn.add_to_tracker(self._user,ioc_type,ioc)
+        else:
+            responses.send_message_to_slack(self._channel,'We are sorry, but we currently only support URLs for the queue')
+    
+    def _checkIOCs(self):
+        db_conn=DBActions()
+        iocs=db_conn.get_user_iocs(self._user)
+
 
 
     def _help(self):
