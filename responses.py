@@ -14,7 +14,7 @@ def send_success_message(channel):
     slack_client.chat_postMessage(channel=channel,text='IOC was submitted!')
 
 def send_failure(channel):
-    slack_client.chat_postMessage(channel=channel,text='Error submitting IOC')
+    slack_client.chat_postMessage(channel=channel,text='Error Occured, please try again')
 
 def send_ioc_count(channel,count):
     slack_client.chat_postMessage(channel=channel,text=f'Attempting to submit {str(count)} IOCs')
@@ -28,7 +28,9 @@ def send_ioc_list(channel,ioc_array):
     for i in ioc_array:
         message+=f"IOC Type: {i['type']}\tIOC: {i['ioc']}\n"
     slack_client.chat_postMessage(channel=channel,text=message)
-    
+
+def send_ioc(channel,ioc):
+    slack_client.chat_postMessage(channel=channel, text=f'Thank you for conducting analysis on this IOC. You have been assigned: {ioc}')    
 
 
 def send_help(channel,user):

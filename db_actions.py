@@ -60,4 +60,4 @@ class DBActions:
         except Exception as err:
             self._handle_error(err)
             self._exit()
-            return [{}]
+            return []
