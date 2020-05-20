@@ -7,6 +7,7 @@ import responses
 import time
 import environment
 from db_actions import DBActions
+from tc_api import tc_api
 
 logger=logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -45,6 +46,8 @@ class Action:
                 db_conn=DBActions()
                 ioc_type='URL'
                 # ioc = req.get('THREATCONNECT ENDPOINT')
+                tc=tc_api()
+                ioc=tc.make_request('/api/v2/tags/Needs%20Review/indicators?resultStart=100','GET')
                 ioc='hxxp://ThisIsATestIOC.com/PleaseIgnore'
                 db_conn.add_to_tracker(self._user,ioc_type,ioc)
                 responses.send_ioc(self._channel,ioc)
