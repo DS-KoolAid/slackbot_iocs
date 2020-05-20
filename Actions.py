@@ -40,6 +40,16 @@ class Action:
         else:
             self._unknown_command()
 
+    def __check_existing_iocs(self,db_conn,ioc_array):
+        for ioc in ioc_array:
+            logger.debug(f'CHECKING IOC:\t{ioc}')
+            found= db_conn.check_if_ioc_exists(ioc)
+            if not found:
+                logger.debug('IOC IS BEING ASSIGNED')
+                ass_ioc=ioc
+                return ioc
+        return None
+
     def _getIOC(self):
         if 'url' in self._command_arguments:
             try:
@@ -50,13 +60,11 @@ class Action:
                 ioc_array=tc.get_iocs()
                 page=1
                 found=False
-                while found==False:
-                    for ioc in ioc_array:
-                        logger.debug(f'CHECKING IOC:\t{ioc}')
-                        found= db_conn.check_if_ioc_exists(ioc)
-                        if found:
-                            logger.debug('IOC IS BEING ASSIGNED')
-                            break
+                ioc=None
+                while True:
+                    ioc=self.__check_existing_iocs(db_conn,ioc_array) 
+                    if ioc:
+                        break
                     page+=1
                     ioc_array=tc.get_iocs(page=page)
                     if not ioc_array:

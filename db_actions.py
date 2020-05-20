@@ -45,10 +45,9 @@ class DBActions:
 
     def add_to_tracker(self,user,ioc,ioc_type):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
-        ioc=_sanitize(ioc)
-        query=f"INSERT INTO {table_name}(NAME, IOC_TYPE, IOC, TIME) VALUES ('{user}', '{ioc_type}', '{ioc}', '{date.today()}')"
+        query=f"INSERT INTO {table_name}(NAME, IOC_TYPE, IOC, TIME) VALUES (%s, %s, %s, '{date.today()}')"
         try:
-            self.cursor.execute(query)
+            self.cursor.execute(query,(user,ioc_type,ioc))
             self.conn.commit()
         except Exception as err:
             self._handle_error(err)
@@ -59,19 +58,22 @@ class DBActions:
         # ioc=_sanitize(ioc)
         query=f"SELECT IOC FROM {table_name} WHERE IOC = %s"
         try:
-            self.cursor.execute(query,(ioc))
+            self.cursor.execute(query,(ioc,))
             test = self.cursor.fetchall()
             if test == '':
+                return False
+            else:
                 return True
         except Exception as err:
             self._handle_error(err)
+
             
 
     def get_user_iocs(self,user):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
         query = f"SELECT IOC_TYPE, IOC, TIME FROM {table_name} WHERE NAME = %s"
         try:
-            self.cursor.execute(query,(user))
+            self.cursor.execute(query,(user,))
             records = self.cursor.fetchall()
             rec_array=[]
             for i in records:
