@@ -50,18 +50,18 @@ class Action:
                 ioc_array=tc.get_iocs()
                 ioc=None
                 page=1
-                while True:
-                    logger.debug(f'CHECKING IOC:\t{ioc}')
-                    ioc= db_conn.check_if_ioc_exists(ioc_array)
-                    if ioc:
-                        logger.debug('IOC IS BEING ASSIGNED')
-                        break
-                    else:
-                        page+=1
-                        ioc_array=tc.get_iocs(page=page)
-                        if not ioc_array:
-                            responses.send_failure(self._channel)
-                            return
+                found=False
+                while found==False:
+                    for ioc in ioc_array:
+                        logger.debug(f'CHECKING IOC:\t{ioc}')
+                        found= db_conn.check_if_ioc_exists(ioc)
+                        if found:
+                            logger.debug('IOC IS BEING ASSIGNED')
+                            break
+                    page+=1
+                    ioc_array=tc.get_iocs(page=page)
+                    if not ioc_array:
+                        raise Exception("No IOCs returned from ThreatConnect")
                 db_conn.add_to_tracker(self._user,ioc_type,ioc)
                 responses.send_ioc(self._channel,ioc)
             except:

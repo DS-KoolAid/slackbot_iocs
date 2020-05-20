@@ -53,18 +53,17 @@ class DBActions:
             self._handle_error(err)
         # self._exit()
 
-    def check_if_ioc_exists(self,ioc_array):
+    def check_if_ioc_exists(self,ioc):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
-        for i in ioc_array:
-            ioc=self._sanitize(i)
-            query=f"SELECT IOC FROM {table_name} WHERE IOC = '{ioc}'"
-            try:
-                self.cursor.execute(query)
-                test = self.cursor.fetchall()
-                if test == '':
-                    return ioc
-            except Exception as err:
-                self._handle_error(err)
+        ioc=self._sanitize(ioc)
+        query=f"SELECT IOC FROM {table_name} WHERE IOC = '{ioc}'"
+        try:
+            self.cursor.execute(query)
+            test = self.cursor.fetchall()
+            if test == '':
+                return True
+        except Exception as err:
+            self._handle_error(err)
             
 
     def get_user_iocs(self,user):
