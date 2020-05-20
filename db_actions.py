@@ -16,8 +16,12 @@ conn_string = f"host={config['DBConfig']['HOST']} dbname={config['DBConfig']['DB
 class DBActions:
 
     def __init__(self):
-        self.conn=psycopg2.connect(conn_string)
-        self.cursor=conn.cursor()
+        try:
+            self.conn=psycopg2.connect(conn_string)
+            self.cursor=conn.cursor()
+        except Exception as err:
+            self._handle_error(err)
+
     
     def __del__(self):
         self.cursor.close()
