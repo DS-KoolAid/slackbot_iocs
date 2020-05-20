@@ -56,10 +56,10 @@ class DBActions:
 
     def check_if_ioc_exists(self,ioc):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
-        ioc=_sanitize(ioc)
-        query=f"SELECT IOC FROM {table_name} WHERE IOC = '{ioc}'"
+        # ioc=_sanitize(ioc)
+        query=f"SELECT IOC FROM {table_name} WHERE IOC = %s"
         try:
-            self.cursor.execute(query)
+            self.cursor.execute(query,(ioc))
             test = self.cursor.fetchall()
             if test == '':
                 return True
@@ -69,9 +69,9 @@ class DBActions:
 
     def get_user_iocs(self,user):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
-        query = f"SELECT IOC_TYPE, IOC, TIME FROM {table_name} WHERE NAME = '{user}'"
+        query = f"SELECT IOC_TYPE, IOC, TIME FROM {table_name} WHERE NAME = %s"
         try:
-            self.cursor.execute(query)
+            self.cursor.execute(query,(user))
             records = self.cursor.fetchall()
             rec_array=[]
             for i in records:
