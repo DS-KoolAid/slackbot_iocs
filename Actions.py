@@ -48,7 +48,6 @@ class Action:
                 # ioc = req.get('THREATCONNECT ENDPOINT')
                 tc=tc_api()
                 ioc_array=tc.get_iocs()
-                ioc=None
                 page=1
                 found=False
                 while found==False:

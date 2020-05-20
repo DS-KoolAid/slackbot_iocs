@@ -13,6 +13,13 @@ config.read('db.ini')
 
 conn_string = f"host={config['DBConfig']['HOST']} dbname={config['DBConfig']['DB']} user={config['DBConfig']['USER']} password={config['DBConfig']['PASSWORD']}"
 
+
+def _sanitize(s):
+        s=s.trim(' ')
+        s=s.trim('/**/')
+        s=s.trim("'")
+        s=s.trim('"')
+
 class DBActions:
 
     def __init__(self):
@@ -35,16 +42,10 @@ class DBActions:
         logger.debug(f'SQL ERROR:\n{error_message}')
         self.conn.rollback()
 
-    def _sanitize(s):
-        s=s.trim(' ')
-        s=s.trim('/**/')
-        s=s.trim("'")
-        s=s.trim('"')
-
 
     def add_to_tracker(self,user,ioc,ioc_type):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
-        ioc=self._sanitize(ioc)
+        ioc=_sanitize(ioc)
         query=f"INSERT INTO {table_name}(NAME, IOC_TYPE, IOC, TIME) VALUES ('{user}', '{ioc_type}', '{ioc}', '{date.today()}')"
         try:
             self.cursor.execute(query)
@@ -55,7 +56,7 @@ class DBActions:
 
     def check_if_ioc_exists(self,ioc):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
-        ioc=self._sanitize(ioc)
+        ioc=_sanitize(ioc)
         query=f"SELECT IOC FROM {table_name} WHERE IOC = '{ioc}'"
         try:
             self.cursor.execute(query)
@@ -81,3 +82,5 @@ class DBActions:
             self._handle_error(err)
             # self._exit()
             return []
+
+            
