@@ -18,7 +18,7 @@ class DBActions:
     def __init__(self):
         try:
             self.conn=psycopg2.connect(conn_string)
-            self.cursor=conn.cursor()
+            self.cursor=self.conn.cursor()
         except Exception as err:
             self._handle_error(err)
 
