@@ -60,7 +60,7 @@ class DBActions:
         try:
             self.cursor.execute(query,(ioc,))
             test = self.cursor.fetchall()
-            if test == '':
+            if not test:
                 return False
             else:
                 return True
