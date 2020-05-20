@@ -47,8 +47,19 @@ class Action:
                 ioc_type='URL'
                 # ioc = req.get('THREATCONNECT ENDPOINT')
                 tc=tc_api()
-                ioc=tc.make_request('/api/v2/tags/Needs%20Review/indicators?resultStart=100','GET')
-                ioc='hxxp://ThisIsATestIOC.com/PleaseIgnore'
+                ioc_array=tc.get_user_iocs()
+                ioc=None
+                page=1
+                while True:
+                    ioc= db_conn.check_if_ioc_exists(ioc_array)
+                    if ioc:
+                        break
+                    else:
+                        page+=1
+                        ioc_array=tc.get_user_iocs(page=page)
+                        if not ioc_array:
+                            responses.send_failure(self._channel)
+                            return
                 db_conn.add_to_tracker(self._user,ioc_type,ioc)
                 responses.send_ioc(self._channel,ioc)
             except:

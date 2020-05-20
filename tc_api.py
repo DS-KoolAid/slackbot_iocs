@@ -23,6 +23,7 @@ try:
     api_secret_key = config.get('threatconnect', 'api_secret_key')
     api_default_org = config.get('threatconnect', 'api_default_org')
     api_base_url = config.get('threatconnect', 'api_base_url')
+    api_ioc_uri_feed = config.get('threatconnect', 'api_ioc_uri_feed')
 except ConfigParser.NoOptionError:
     print('Could not read configuration file.')
     sys.exit(1)
@@ -42,6 +43,8 @@ class tc_api():
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(funcName)s:%(lineno)d)')
         self.tcl = logging.getLogger('TC_API')
         self.tcl.addHandler(logging.StreamHandler())
+
+        self.api_ioc_uri_feed = api_ioc_uri_feed
 
         # debugging
         self._memory_monitor = True
@@ -98,8 +101,24 @@ class tc_api():
         # ro.add_header('Timestamp', timestamp)
         # ro.add_header('Authorization', authorization)
 
-    def make_request(self,uri,method,payload=None):
-        ts,auth=self._api_request_headers(uri,method)
-        if method=='GET':
+    def get_iocs(self,page=1):
+        uri=self.api_ioc_uri_feed
+        method="GET"
+        ioc_array=[]
+        if page==1:
+            ts,auth=self._api_request_headers(uri,method)
             r=req.get(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
-            return json.loads(r.text)
+            jd=json.loads(r.text)
+            for i in jd['data']['indicator']:
+                ioc_array.append(i['summary'])
+            return ioc_array
+            
+        else:
+            strt=str(page*100)
+            uri+="?resultStart="+strt+"&resultLimit=100"
+            ts,auth=self._api_request_headers(uri,method)
+            r=req.get(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
+            jd=json.loads(r.text)
+            for i in jd['data']['indicator']:
+                ioc_array.append(i['summary'])
+            return ioc_array

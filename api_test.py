@@ -1,7 +1,7 @@
 import requests as req
 import time, subprocess
 import logging,json
-from TC_API import TC_API
+from tc_api import tc_api
 
 
 logger=logging.getLogger(__name__)
@@ -10,11 +10,13 @@ logger.addHandler(logging.StreamHandler())
 
 
 
-tc = TC_API()
-d=tc.make_request('/api/v2/tags/Needs%20Review/indicators?resultStart=100','GET')
-jd=json.loads(d)
-for i in range(0,100):
-    print(json.dumps(jd['data']['indicator'][0],indent=4))
-# print(json.dumps(jd,indent=4))
+tc = tc_api()
+d=tc.get_iocs(page=2)
+for i in d:
+    print(d)
+# print(json.dumps(d['data']['indicator']))
+# for i in d['data']['indicator']:
+#     print(json.dumps(i['summary'],indent=4))
+
 
 

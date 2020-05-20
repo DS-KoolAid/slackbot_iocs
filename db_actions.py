@@ -18,10 +18,14 @@ class DBActions:
     def __init__(self):
         self.conn=psycopg2.connect(conn_string)
         self.cursor=conn.cursor()
-
-    def _exit(self):
+    
+    def __del__(self):
         self.cursor.close()
         self.conn.close()
+
+    # def _exit(self):
+    #     self.cursor.close()
+    #     self.conn.close()
 
     def _handle_error(self,error_message):
         logger.debug(f'SQL ERROR:\n{error_message}')
@@ -43,7 +47,21 @@ class DBActions:
             self.conn.commit()
         except Exception as err:
             self._handle_error(err)
-        self._exit()
+        # self._exit()
+
+    def check_if_ioc_exists(self,ioc_array):
+        table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
+        for i in ioc_array:
+            ioc=self._sanitize(i)
+            query=f"SELECT IOC FROM {table_name} WHERE IOC = '{ioc}'"
+            try:
+                self.cursor.execute(query)
+                test = self.cursor.fetchall()
+                if test == '':
+                    return ioc
+            except Exception as err:
+                self._handle_error(err)
+            
 
     def get_user_iocs(self,user):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
@@ -59,5 +77,5 @@ class DBActions:
             return rec_array
         except Exception as err:
             self._handle_error(err)
-            self._exit()
+            # self._exit()
             return []
