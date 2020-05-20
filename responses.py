@@ -26,7 +26,7 @@ def send_unknown(channel):
 def send_ioc_list(channel,ioc_array):
     message="IOCs:\n"
     for i in ioc_array:
-        message+=f"IOC Type: {i['type']}\tIOC: {i['ioc']}\n"
+        message+=f"IOC Type: {i['IOC_type']}\tIOC: {i['IOC']}\n"
     slack_client.chat_postMessage(channel=channel,text=message)
 
 def send_ioc(channel,ioc):
