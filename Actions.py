@@ -33,9 +33,9 @@ class Action:
             self._falsepositive()
         elif self._command == 'bulkadd':
             self._bulkadd()
-        elif self._command == 'getIOCFromQueue':
+        elif self._command == 'getnewioc':
             self._getIOC()
-        elif self._command == 'checkMyIOCs':
+        elif self._command == 'checkmyiocs':
             self._checkIOCs()
         else:
             self._unknown_command()
