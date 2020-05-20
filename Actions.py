@@ -47,18 +47,18 @@ class Action:
                 ioc_type='URL'
                 # ioc = req.get('THREATCONNECT ENDPOINT')
                 tc=tc_api()
-                ioc_array=tc.get_user_iocs()
-                logger.debug(str(ioc_array))
+                ioc_array=tc.get_iocs()
                 ioc=None
                 page=1
                 while True:
-                    ioc= db_conn.check_if_ioc_exists(ioc_array)
                     logger.debug(f'CHECKING IOC:\t{ioc}')
+                    ioc= db_conn.check_if_ioc_exists(ioc_array)
                     if ioc:
+                        logger.debug('IOC IS BEING ASSIGNED')
                         break
                     else:
                         page+=1
-                        ioc_array=tc.get_user_iocs(page=page)
+                        ioc_array=tc.get_iocs(page=page)
                         if not ioc_array:
                             responses.send_failure(self._channel)
                             return
