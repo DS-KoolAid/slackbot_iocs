@@ -48,10 +48,12 @@ class Action:
                 # ioc = req.get('THREATCONNECT ENDPOINT')
                 tc=tc_api()
                 ioc_array=tc.get_user_iocs()
+                logger.debug(str(ioc_array))
                 ioc=None
                 page=1
                 while True:
                     ioc= db_conn.check_if_ioc_exists(ioc_array)
+                    logger.debug(f'CHECKING IOC:\t{ioc}')
                     if ioc:
                         break
                     else:
