@@ -69,7 +69,6 @@ class DBActions:
         try:
             self.cursor.execute(query)
             records = self.cursor.fetchall()
-            self._exit()
             rec_array=[]
             for i in records:
                 rec={'IOC_type':i[0], 'IOC': i[1], 'TIME': i[2]}

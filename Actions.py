@@ -41,7 +41,7 @@ class Action:
             self._unknown_command()
 
     def _getIOC(self):
-        if 'URL' in self._command_arguments:
+        if 'url' in self._command_arguments:
             try:
                 db_conn=DBActions()
                 ioc_type='URL'
