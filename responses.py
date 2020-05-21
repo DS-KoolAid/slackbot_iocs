@@ -6,6 +6,9 @@ token=environment.TOKEN
 
 slack_client=WebClient(token)
 
+def _defang(url):
+    return url.replace('http','hxxp')
+
 
 def send_message_to_slack(channel, text):
     slack_client.chat_postMessage(channel=channel,text=text)
@@ -26,11 +29,11 @@ def send_unknown(channel):
 def send_ioc_list(channel,ioc_array):
     message="IOCs:\n"
     for i in ioc_array:
-        message+=f"IOC Type: {i['IOC_type']}\tIOC: {i['IOC']}\n"
+        message+=f"IOC Type: {i['IOC_type']}\tIOC: {_defang(i['IOC'])}\n"
     slack_client.chat_postMessage(channel=channel,text=message)
 
 def send_ioc(channel,ioc):
-    slack_client.chat_postMessage(channel=channel, text=f'Thank you for conducting analysis on this IOC.\n You have been assigned:\t {ioc}')    
+    slack_client.chat_postMessage(channel=channel, text=f'Thank you for conducting analysis on this IOC.\n You have been assigned:\t {_defang(ioc)}')    
 
 
 def send_help(channel,user):

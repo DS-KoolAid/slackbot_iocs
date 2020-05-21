@@ -67,6 +67,15 @@ class DBActions:
         except Exception as err:
             self._handle_error(err)
 
+    def check_number_of_iocs(self,user):
+        table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
+        query =f'select count from {table_name} where name = %s'
+        try:
+            self.cursor.execute(query,(user,))
+            count=self.cursor.fetchone()
+            return count[0]
+        except Exception as err:
+            self._handle_error(err)
             
 
     def get_user_iocs(self,user):

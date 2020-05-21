@@ -14,6 +14,9 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler())
 
 
+
+
+
 class Action:
 
     def __init__(self, channel, user, command, command_arguments, files=None):
@@ -40,7 +43,7 @@ class Action:
         else:
             self._unknown_command()
 
-    def __check_existing_iocs(self,db_conn,ioc_array):
+    def _check_existing_iocs(self,db_conn,ioc_array):
         for ioc in ioc_array:
             logger.debug(f'CHECKING IOC:\t{ioc}')
             found= db_conn.check_if_ioc_exists(ioc)
@@ -51,9 +54,13 @@ class Action:
         return None
 
     def _getIOC(self):
+        db_conn=DBActions()
+        if db_conn.check_number_of_iocs(self.user) >=10:
+            responses.send_message_to_slack(self._channel,'You currently have the max number of IOCs checked out\n\n You can view your IOCs with the `checkmyiocs` command')
+            return 
         if 'url' in self._command_arguments:
             try:
-                db_conn=DBActions()
+                
                 ioc_type='URL'
                 # ioc = req.get('THREATCONNECT ENDPOINT')
                 tc=tc_api()
@@ -62,7 +69,7 @@ class Action:
                 found=False
                 ioc=None
                 while True:
-                    ioc=self.__check_existing_iocs(db_conn,ioc_array) 
+                    ioc=self._check_existing_iocs(db_conn,ioc_array) 
                     if ioc:
                         break
                     page+=1
