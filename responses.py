@@ -7,7 +7,9 @@ token=environment.TOKEN
 slack_client=WebClient(token)
 
 def _defang(url):
-    return url.replace('http','hxxp')
+    url=url.replace('http','hxxp')
+    url=url.replace('.','[.]')
+    return url
 
 
 def send_message_to_slack(channel, text):
