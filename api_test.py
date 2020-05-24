@@ -13,7 +13,7 @@ logger.addHandler(logging.StreamHandler())
 tc = tc_api()
 d=tc.get_iocs(page=2)
 for i in d:
-    print(d)
+    print (i)
 # print(json.dumps(d['data']['indicator']))
 # for i in d['data']['indicator']:
 #     print(json.dumps(i['summary'],indent=4))

@@ -110,7 +110,8 @@ class tc_api():
             r=req.get(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
             jd=json.loads(r.text)
             for i in jd['data']['indicator']:
-                ioc_array.append(i['summary'])
+                d={'id':i['id'],'ioc':i['summary']}
+                ioc_array.append(d)
             return ioc_array
             
         else:
@@ -120,5 +121,6 @@ class tc_api():
             r=req.get(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
             jd=json.loads(r.text)
             for i in jd['data']['indicator']:
-                ioc_array.append(i['summary'])
+                d={'id':i['id'],'ioc':i['summary']}
+                ioc_array.append(d)
             return ioc_array
