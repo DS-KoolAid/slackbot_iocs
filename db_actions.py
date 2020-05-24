@@ -45,7 +45,7 @@ class DBActions:
 
     def add_to_tracker(self,user,ioc,ioc_type):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
-        query=f"INSERT INTO {table_name}(NAME, IOC_TYPE, IOC, tc_id, TIME) VALUES (%s, %s, %s, %d, '{date.today()}')"
+        query=f"INSERT INTO {table_name}(NAME, IOC_TYPE, IOC, tc_id, TIME) VALUES (%s, %s, %s, %s, '{date.today()}')"
         try:
             self.cursor.execute(query,(user,ioc_type,ioc['summary'],ioc['id']))
             self.conn.commit()
@@ -56,11 +56,11 @@ class DBActions:
     def check_if_ioc_exists(self,ioc):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
         # ioc=_sanitize(ioc)
-        query=f"SELECT IOC FROM {table_name} WHERE tc_id = %d"
+        query=f"SELECT count(*) FROM {table_name} WHERE tc_id = %s"
         try:
             self.cursor.execute(query,(ioc,))
-            test = self.cursor.fetchall()
-            if not test:
+            test = self.cursor.fetchone()
+            if test[0] == 0:
                 return False
             else:
                 return True
