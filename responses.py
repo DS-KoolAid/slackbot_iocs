@@ -35,7 +35,9 @@ def send_ioc_list(channel,ioc_array):
     slack_client.chat_postMessage(channel=channel,text=message)
 
 def send_ioc(channel,ioc):
-    slack_client.chat_postMessage(channel=channel, text=f'Thank you for conducting analysis on this IOC.\n You have been assigned:\t {_defang(ioc)}')    
+    ioc_id=ioc['id']
+    ioc_act=ioc['ioc']
+    slack_client.chat_postMessage(channel=channel, text=f'Thank you for conducting analysis on this IOC.\n You have been assigned:\t ID: {ioc_id}\tIOC: {_defang(ioc_act)}')    
 
 
 def send_help(channel,user):

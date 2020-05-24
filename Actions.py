@@ -14,9 +14,6 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler())
 
 
-
-
-
 class Action:
 
     def __init__(self, channel, user, command, command_arguments, files=None):
@@ -40,6 +37,8 @@ class Action:
             self._getIOC()
         elif self._command == 'checkmyiocs':
             self._checkIOCs()
+        elif self._command == 'submitioc':
+            self._submitIOC()
         else:
             self._unknown_command()
 
@@ -78,7 +77,7 @@ class Action:
                         raise Exception("No IOCs returned from ThreatConnect")
                 logger.debug(f'IOC being passed to db object {ioc}')
                 db_conn.add_to_tracker(self._user,ioc,ioc_type)
-                responses.send_ioc(self._channel,ioc['ioc'])
+                responses.send_ioc(self._channel,ioc)
             except:
                 responses.send_failure(self._channel)
         else:
@@ -94,6 +93,31 @@ class Action:
                 responses.send_ioc_list(self._channel,iocs)
         except:
                 responses.send_failure(self._channel)
+
+    def _submitIOC(self):
+        try:
+            if self._command_arguments[0].isdigit() and (self._command_arguments[1] == 'vetted' or self._command_arguments[1] == 'unvetted'):
+                db_conn=DBActions()
+                iocs=db_conn.get_user_iocs(self._user)
+                belong_to_user=False
+                ioc_type=''
+                for i in iocs:
+                    if i['id'] == int(self._command_arguments[0]):
+                        belong_to_user = True
+                        ioc_type=i['IOC_type']
+                        break
+                if belong_to_user == True:
+                    tc=tc_api()
+                    succ=tc.submitioc(self._command_arguments[0],self._command_arguments[1],ioc_type)
+                    if not succ: 
+                        raise
+                    db_conn.remove_ioc(self._command_arguments[0])
+                else:
+                    responses.send_message_to_slack(self._channel,"It seems that this IOC was not assigned to you. You can only submit ioc analysis for iocs assinged to you.")
+            else: 
+                responses.send_message_to_slack(self._channel, 'The format for this command is `submitioc <id> <vetted|unvetted>')
+        except:
+            responses.send_failure(self._channel)
 
 
 

@@ -8,6 +8,11 @@ import time
 import sys
 import json
 
+logger=logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler())
+
+
 
 try:
     import ConfigParser
@@ -45,6 +50,8 @@ class tc_api():
         self.tcl.addHandler(logging.StreamHandler())
 
         self.api_ioc_uri_feed = api_ioc_uri_feed
+
+        self.api_vetted_unvetted = api_vetted_unvetted
 
         # debugging
         self._memory_monitor = True
@@ -124,3 +131,22 @@ class tc_api():
                 d={'id':i['id'],'ioc':i['summary']}
                 ioc_array.append(d)
             return ioc_array
+
+    def submit_ioc(self,ioc,status,ioc_type):
+        method="POST"
+        uri=self.api_vetted_unvetted
+        uri=uri.replace('{inidcator_type}',ioc_type)
+        uri=uri.replace("{indicator}",ioc)
+        if status == 'vetted':
+            uri=uri.replace('{tagName}',status)
+        else:
+            uri=uri.replace('{tagName}',status)
+        ts,auth=self._api_request_headers(uri,method)
+        logger.debug(f'URI for submitting: {uri}')
+        return True
+        # r=req.get(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
+        # jd=json.loads(r.text)
+        # if jd['status'] == 'Success':
+        #     return True
+        # else:
+        #     return False
