@@ -69,7 +69,7 @@ class DBActions:
 
     def check_number_of_iocs(self,user):
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
-        query =f'select count from {table_name} where name = %s'
+        query =f'select count(*) from {table_name} where name = %s'
         try:
             self.cursor.execute(query,(user,))
             count=self.cursor.fetchone()
