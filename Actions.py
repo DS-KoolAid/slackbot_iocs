@@ -77,7 +77,7 @@ class Action:
                     if not ioc_array:
                         raise Exception("No IOCs returned from ThreatConnect")
                 db_conn.add_to_tracker(self._user,ioc,ioc_type)
-                responses.send_ioc(self._channel,ioc)
+                responses.send_ioc(self._channel,ioc['summary'])
             except:
                 responses.send_failure(self._channel)
         else:
