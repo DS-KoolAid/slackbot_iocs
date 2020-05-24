@@ -46,7 +46,7 @@ class Action:
     def _check_existing_iocs(self,db_conn,ioc_array):
         for ioc in ioc_array:
             logger.debug(f'CHECKING IOC:\t{ioc}')
-            found= db_conn.check_if_ioc_exists(ioc['tc_id'])
+            found= db_conn.check_if_ioc_exists(ioc['id'])
             if not found:
                 logger.debug('IOC IS BEING ASSIGNED')
                 ass_ioc=ioc
