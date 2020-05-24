@@ -47,7 +47,7 @@ class DBActions:
         table_name=config['DBConfig']['TRACKER_TABLE'].strip("'")
         query=f"INSERT INTO {table_name}(NAME, IOC_TYPE, IOC, tc_id, TIME) VALUES (%s, %s, %s, %s, '{date.today()}')"
         try:
-            self.cursor.execute(query,(user,ioc_type,ioc['summary'],ioc['id']))
+            self.cursor.execute(query,(user,ioc_type,ioc['ioc'],ioc['id']))
             self.conn.commit()
         except Exception as err:
             self._handle_error(err)

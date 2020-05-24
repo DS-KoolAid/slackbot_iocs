@@ -76,8 +76,9 @@ class Action:
                     ioc_array=tc.get_iocs(page=page)
                     if not ioc_array:
                         raise Exception("No IOCs returned from ThreatConnect")
+                logger.debug(f'IOC being passed to db object {ioc}')
                 db_conn.add_to_tracker(self._user,ioc,ioc_type)
-                responses.send_ioc(self._channel,ioc['summary'])
+                responses.send_ioc(self._channel,ioc['ioc'])
             except:
                 responses.send_failure(self._channel)
         else:
