@@ -55,7 +55,7 @@ class Action:
 
     def _getIOC(self):
         db_conn=DBActions()
-        if db_conn.check_number_of_iocs(self.user) >=10:
+        if db_conn.check_number_of_iocs(self._user) >=10:
             responses.send_message_to_slack(self._channel,'You currently have the max number of IOCs checked out\n\n You can view your IOCs with the `checkmyiocs` command')
             return 
         if 'url' in self._command_arguments:
