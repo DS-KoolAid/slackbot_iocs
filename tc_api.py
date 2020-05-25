@@ -135,6 +135,7 @@ class tc_api():
 
     def submit_ioc(self,ioc,status,ioc_type):
         method="POST"
+        ioc_type=ioc_type.replace(' ','')
         uri=self.api_vetted_unvetted
         uri=uri.replace('{indicatorType}',ioc_type)
         uri=uri.replace("{indicator}",ioc)

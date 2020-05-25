@@ -98,7 +98,7 @@ class DBActions:
         query = f'DELETE FROM {table_name} where tc_id = %s'
         try:
             self.cursor.execute(query,(ioc_id,))
-            cursor.commit()
+            self.conn.commit()
         except Exception as err:
             self._handle_error(err)
             
