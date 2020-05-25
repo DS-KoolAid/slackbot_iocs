@@ -114,6 +114,7 @@ class Action:
                     succ=tc.submitioc(self._command_arguments[0],self._command_arguments[1],ioc_type)
                     if not succ: 
                         raise
+                    logger.debug('Fourth')
                     db_conn.remove_ioc(self._command_arguments[0])
                 else:
                     responses.send_message_to_slack(self._channel,"It seems that this IOC was not assigned to you. You can only submit ioc analysis for iocs assinged to you.")
