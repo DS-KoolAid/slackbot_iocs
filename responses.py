@@ -40,6 +40,17 @@ def send_ioc(channel,ioc):
     slack_client.chat_postMessage(channel=channel, text=f'Thank you for conducting analysis on this IOC.\n You have been assigned:\t ID: {ioc_id}\tIOC: {_defang(ioc_act)}')    
 
 
+def send_thankyou(channel,user):
+    slack_client.chat_postMessage(channel=channel,blocks=[
+        {
+                "type":"section",
+                "text":{
+                    "type":"mrkdwn",
+                    "text":"Thank you <@"+user+">! :tada:"
+                    }
+            }
+    ])
+
 def send_help(channel,user):
      slack_client.chat_postMessage(channel=channel,blocks=[
             {

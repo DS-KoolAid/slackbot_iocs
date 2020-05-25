@@ -113,11 +113,16 @@ class Action:
                     if not succ: 
                         logger.debug('**WARNING*** submitting ioc failed')
                         raise
-                    db_conn.remove_ioc(self._command_arguments[0])
+                    
+                    succ = db_conn.remove_ioc(self._command_arguments[0])
+                    if not succ:
+                        raise
+                    responses.send_thankyou(self._channel,self._user)
+
                 else:
                     responses.send_message_to_slack(self._channel,"It seems that this IOC was not assigned to you. You can only submit ioc analysis for iocs assinged to you.")
             else: 
-                responses.send_message_to_slack(self._channel, 'The format for this command is `submitioc <id> <vetted|unvetted>')
+                responses.send_message_to_slack(self._channel, 'The format for this command is `submitioc <id> <vetted|unvetted>`')
         except:
             responses.send_failure(self._channel)
 

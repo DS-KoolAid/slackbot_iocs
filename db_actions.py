@@ -99,6 +99,8 @@ class DBActions:
         try:
             self.cursor.execute(query,(ioc_id,))
             self.conn.commit()
+            return True
         except Exception as err:
             self._handle_error(err)
+            return False
             
