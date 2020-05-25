@@ -146,6 +146,7 @@ class tc_api():
         ts,auth=self._api_request_headers(uri,method)
         logger.debug(f'URI for submitting: {uri}')
         r=req.post(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
+        logger.debug(f'Response: {r.text}')
         jd=json.loads(r.text)
         if jd['status'] == 'Success':
             return True
@@ -165,6 +166,7 @@ class tc_api():
         ts,auth=self._api_request_headers(uri,method)
         logger.debug(f'Delete need review tag: {uri}')
         r=req.delete(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
+        logger.debug(f'Response: {r.text}')
         jd=json.loads(r.text)
         if jd['status'] == 'Success':
             return True
