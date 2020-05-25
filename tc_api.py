@@ -7,6 +7,7 @@ import requests as req
 import time
 import sys
 import json
+import urllib
 
 logger=logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -136,6 +137,8 @@ class tc_api():
 
     def submit_ioc(self,ioc,status,ioc_type):
         method="POST"
+        ioc=urllib.parse.quote(ioc)
+        ioc=ioc.replace("/","%2F")
         ioc_type=ioc_type.replace(' ','')
         if ioc_type=='URL':
             ioc_type='urls'
@@ -156,6 +159,8 @@ class tc_api():
     def delete_need_analysis(self,ioc,ioc_type):
         method="DELETE"
         tag='Needs%20Review'
+        ioc=urllib.parse.quote(ioc)
+        ioc=ioc.replace("/","%2F")
         ioc_type=ioc_type.replace(' ','')
         if ioc_type=='URL':
             ioc_type='urls'

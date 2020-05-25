@@ -101,19 +101,21 @@ class Action:
                 iocs=db_conn.get_user_iocs(self._user)
                 belong_to_user=False
                 ioc_type=''
+                indicator=''
                 for i in iocs:
                     if int(i['id']) == int(self._command_arguments[0]):
                         belong_to_user = True
                         ioc_type=i['IOC_type']
+                        indicator=i['ioc']
                         break
                 if belong_to_user:
                     logger.debug('IOC belongs to user... submitting...')
                     tc=tc_api()
-                    succ=tc.submit_ioc(self._command_arguments[0],self._command_arguments[1],ioc_type)
+                    succ=tc.submit_ioc(indicator,self._command_arguments[1],ioc_type)
                     if not succ: 
                         logger.debug('**WARNING*** submitting ioc failed')
                         raise
-                    succ = tc.delete_need_analysis(self._command_arguments[0],ioc_type)
+                    succ = tc.delete_need_analysis(indicator,ioc_type)
                     if not succ:
                         logger.debug('**WARNING** failed to delete tag')
                         raise
