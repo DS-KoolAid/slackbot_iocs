@@ -29,6 +29,7 @@ try:
     api_default_org = config.get('threatconnect', 'api_default_org')
     api_base_url = config.get('threatconnect', 'api_base_url')
     api_ioc_uri_feed = config.get('threatconnect', 'api_ioc_uri_feed')
+    api_vetted_unvetted = config.get('threatconnect','api_vetted_unvetted')
 except ConfigParser.NoOptionError:
     print('Could not read configuration file.')
     sys.exit(1)
@@ -135,12 +136,9 @@ class tc_api():
     def submit_ioc(self,ioc,status,ioc_type):
         method="POST"
         uri=self.api_vetted_unvetted
-        uri=uri.replace('{inidcator_type}',ioc_type)
+        uri=uri.replace('{indicatorType}',ioc_type)
         uri=uri.replace("{indicator}",ioc)
-        if status == 'vetted':
-            uri=uri.replace('{tagName}',status)
-        else:
-            uri=uri.replace('{tagName}',status)
+        uri=uri.replace('{tagName}',status)
         ts,auth=self._api_request_headers(uri,method)
         logger.debug(f'URI for submitting: {uri}')
         return True

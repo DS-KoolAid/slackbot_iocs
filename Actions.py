@@ -102,11 +102,13 @@ class Action:
                 iocs=db_conn.get_user_iocs(self._user)
                 belong_to_user=False
                 ioc_type=''
+                logger.debug('Second')
                 for i in iocs:
                     if int(i['id']) == int(self._command_arguments[0]):
                         belong_to_user = True
                         ioc_type=i['IOC_type']
                         break
+                logger.debug('Third')
                 if belong_to_user == True:
                     tc=tc_api()
                     succ=tc.submitioc(self._command_arguments[0],self._command_arguments[1],ioc_type)
