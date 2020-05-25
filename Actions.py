@@ -113,7 +113,10 @@ class Action:
                     if not succ: 
                         logger.debug('**WARNING*** submitting ioc failed')
                         raise
-                    
+                    succ = tc.delete_need_analysis(self._command_arguments[0],ioc_type)
+                    if not succ:
+                        logger.debug('**WARNING** failed to delete tag')
+                        raise
                     succ = db_conn.remove_ioc(self._command_arguments[0])
                     if not succ:
                         raise

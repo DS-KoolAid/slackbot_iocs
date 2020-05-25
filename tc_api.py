@@ -30,6 +30,7 @@ try:
     api_base_url = config.get('threatconnect', 'api_base_url')
     api_ioc_uri_feed = config.get('threatconnect', 'api_ioc_uri_feed')
     api_vetted_unvetted = config.get('threatconnect','api_vetted_unvetted')
+    api_delete = config.get('threatconnect','api_delete')
 except ConfigParser.NoOptionError:
     print('Could not read configuration file.')
     sys.exit(1)
@@ -53,6 +54,8 @@ class tc_api():
         self.api_ioc_uri_feed = api_ioc_uri_feed
 
         self.api_vetted_unvetted = api_vetted_unvetted
+
+        self.api_delete = api_delete
 
         # debugging
         self._memory_monitor = True
@@ -140,6 +143,23 @@ class tc_api():
         uri=uri.replace('{indicatorType}',ioc_type)
         uri=uri.replace("{indicator}",ioc)
         uri=uri.replace('{tagName}',status)
+        ts,auth=self._api_request_headers(uri,method)
+        logger.debug(f'URI for submitting: {uri}')
+        r=req.get(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
+        jd=json.loads(r.text)
+        if jd['status'] == 'Success':
+            return True
+        else:
+            return False
+
+    def delete_need_analysis(self,ioc,ioc_type):
+        method="DELETE"
+        tag='Needs%20Review'
+        ioc_type=ioc_type.replace(' ','')
+        uri=self.api_vetted_unvetted
+        uri=uri.replace('{indicatorType}',ioc_type)
+        uri=uri.replace("{indicator}",ioc)
+        uri=uri.replace('{tagName}',tag)
         ts,auth=self._api_request_headers(uri,method)
         logger.debug(f'URI for submitting: {uri}')
         r=req.get(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
