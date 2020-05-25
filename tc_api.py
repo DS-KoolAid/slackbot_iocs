@@ -137,6 +137,8 @@ class tc_api():
     def submit_ioc(self,ioc,status,ioc_type):
         method="POST"
         ioc_type=ioc_type.replace(' ','')
+        if ioc_type=='URL':
+            ioc_type='urls'
         uri=self.api_tag
         uri=uri.replace('{indicatorType}',ioc_type)
         uri=uri.replace("{indicator}",ioc)
@@ -154,6 +156,8 @@ class tc_api():
         method="DELETE"
         tag='Needs%20Review'
         ioc_type=ioc_type.replace(' ','')
+        if ioc_type=='URL':
+            ioc_type='urls'
         uri=self.api_tag
         uri=uri.replace('{indicatorType}',ioc_type)
         uri=uri.replace("{indicator}",ioc)
