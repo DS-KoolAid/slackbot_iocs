@@ -96,13 +96,14 @@ class Action:
 
     def _submitIOC(self):
         try:
+            logger.debug('First check ')
             if self._command_arguments[0].isdigit() and (self._command_arguments[1] == 'vetted' or self._command_arguments[1] == 'unvetted'):
                 db_conn=DBActions()
                 iocs=db_conn.get_user_iocs(self._user)
                 belong_to_user=False
                 ioc_type=''
                 for i in iocs:
-                    if i['id'] == int(self._command_arguments[0]):
+                    if int(i['id']) == int(self._command_arguments[0]):
                         belong_to_user = True
                         ioc_type=i['IOC_type']
                         break
