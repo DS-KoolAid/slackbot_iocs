@@ -29,8 +29,8 @@ try:
     api_default_org = config.get('threatconnect', 'api_default_org')
     api_base_url = config.get('threatconnect', 'api_base_url')
     api_ioc_uri_feed = config.get('threatconnect', 'api_ioc_uri_feed')
-    api_vetted_unvetted = config.get('threatconnect','api_vetted_unvetted')
-    api_delete = config.get('threatconnect','api_delete')
+    api_tag = config.get('threatconnect','api_tag')
+
 except ConfigParser.NoOptionError:
     print('Could not read configuration file.')
     sys.exit(1)
@@ -53,9 +53,7 @@ class tc_api():
 
         self.api_ioc_uri_feed = api_ioc_uri_feed
 
-        self.api_vetted_unvetted = api_vetted_unvetted
-
-        self.api_delete = api_delete
+        self.api_tag = api_tag
 
         # debugging
         self._memory_monitor = True
@@ -139,7 +137,7 @@ class tc_api():
     def submit_ioc(self,ioc,status,ioc_type):
         method="POST"
         ioc_type=ioc_type.replace(' ','')
-        uri=self.api_vetted_unvetted
+        uri=self.api_tag
         uri=uri.replace('{indicatorType}',ioc_type)
         uri=uri.replace("{indicator}",ioc)
         uri=uri.replace('{tagName}',status)
@@ -156,12 +154,12 @@ class tc_api():
         method="DELETE"
         tag='Needs%20Review'
         ioc_type=ioc_type.replace(' ','')
-        uri=self.api_vetted_unvetted
+        uri=self.api_tag
         uri=uri.replace('{indicatorType}',ioc_type)
         uri=uri.replace("{indicator}",ioc)
         uri=uri.replace('{tagName}',tag)
         ts,auth=self._api_request_headers(uri,method)
-        logger.debug(f'URI for submitting: {uri}')
+        logger.debug(f'Delete need review tag: {uri}')
         r=req.get(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
         jd=json.loads(r.text)
         if jd['status'] == 'Success':
