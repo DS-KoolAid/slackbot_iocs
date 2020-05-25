@@ -109,9 +109,11 @@ class Action:
                         ioc_type=i['IOC_type']
                         break
                 logger.debug('Third')
-                if belong_to_user == True:
+                logger.debug(f'Belong to user: {str(belong_to_user)}')
+                if belong_to_user:
                     tc=tc_api()
                     succ=tc.submitioc(self._command_arguments[0],self._command_arguments[1],ioc_type)
+                    logger.debug(f"Succ: {str(succ)}")
                     if not succ: 
                         raise
                     logger.debug('Fourth')
