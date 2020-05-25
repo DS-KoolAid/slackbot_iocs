@@ -96,27 +96,23 @@ class Action:
 
     def _submitIOC(self):
         try:
-            logger.debug('First check ')
             if self._command_arguments[0].isdigit() and (self._command_arguments[1] == 'vetted' or self._command_arguments[1] == 'unvetted'):
                 db_conn=DBActions()
                 iocs=db_conn.get_user_iocs(self._user)
                 belong_to_user=False
                 ioc_type=''
-                logger.debug('Second')
                 for i in iocs:
                     if int(i['id']) == int(self._command_arguments[0]):
                         belong_to_user = True
                         ioc_type=i['IOC_type']
                         break
-                logger.debug('Third')
-                logger.debug(f'Belong to user: {str(belong_to_user)}')
                 if belong_to_user:
+                    logger.debug('IOC belongs to user... submitting...')
                     tc=tc_api()
-                    succ=tc.submitioc(self._command_arguments[0],self._command_arguments[1],ioc_type)
-                    logger.debug(f"Succ: {str(succ)}")
+                    succ=tc.submit_ioc(self._command_arguments[0],self._command_arguments[1],ioc_type)
                     if not succ: 
+                        logger.debug('**WARNING*** submitting ioc failed')
                         raise
-                    logger.debug('Fourth')
                     db_conn.remove_ioc(self._command_arguments[0])
                 else:
                     responses.send_message_to_slack(self._channel,"It seems that this IOC was not assigned to you. You can only submit ioc analysis for iocs assinged to you.")

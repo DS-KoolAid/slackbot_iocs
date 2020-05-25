@@ -137,9 +137,7 @@ class tc_api():
         method="POST"
         uri=self.api_vetted_unvetted
         uri=uri.replace('{indicatorType}',ioc_type)
-        logger.debug(f'URI for submitting: {uri}')
         uri=uri.replace("{indicator}",ioc)
-        logger.debug(f'URI for submitting: {uri}')
         uri=uri.replace('{tagName}',status)
         ts,auth=self._api_request_headers(uri,method)
         logger.debug(f'URI for submitting: {uri}')
