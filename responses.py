@@ -72,6 +72,9 @@ def send_help(channel,user):
                     ```addioc `<domain>` ```
                     ```bulkadd (attach text file with domains to this message)```
                     ```falsepositive `<domain>` ```
+                    ```getnewioc <URL|hash> (only supports URL currently)```
+                    ```checkmyiocs```
+                    ```submitioc <id> <vetted|unvetted>```
                     """
                 }
 

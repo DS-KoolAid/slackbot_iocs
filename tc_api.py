@@ -142,10 +142,9 @@ class tc_api():
         uri=uri.replace('{tagName}',status)
         ts,auth=self._api_request_headers(uri,method)
         logger.debug(f'URI for submitting: {uri}')
-        return True
-        # r=req.get(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
-        # jd=json.loads(r.text)
-        # if jd['status'] == 'Success':
-        #     return True
-        # else:
-        #     return False
+        r=req.get(f'{self._api_url}{uri}',headers={'Timestamp':str(ts),'Authorization':str(auth)})
+        jd=json.loads(r.text)
+        if jd['status'] == 'Success':
+            return True
+        else:
+            return False
