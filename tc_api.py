@@ -141,6 +141,8 @@ class tc_api():
         ioc_type=ioc_type.replace(' ','')
         if ioc_type=='URL':
             ioc_type='urls'
+        if status == 'unvetted':
+            status='False%20Positive'
         uri=self.api_tag
         uri=uri.replace('{indicatorType}',ioc_type)
         uri=uri.replace("{indicator}",ioc)
