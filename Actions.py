@@ -188,11 +188,13 @@ class Action:
 
         for i in ioc_array:
             res = req.post(tc_url, data=i)
+            logger.debug(f"Result status code: {res.status}")
             if not res.ok:
                 logger.debug(f'Upload Failure:\n {res.text}')
                 responses.send_failure(self._channel)
                 return
             count += 1
+            logger.debug(f'Uploaded: {i}')
             time.sleep(10)
 
         logger.debug(f'Number of IOCs submitted: {str(count)}')
