@@ -165,40 +165,41 @@ class Action:
 
 
     def _bulkadd(self):
-        tc_url = environment.DOMAIN_TC
-        f = self._files
-        iocs=''
+        responses.send_message_to_slack(self._channel,'Sorry for the inconvience, this bot is going through an upgrade and this function is currently unavailable.')
+        # tc_url = environment.DOMAIN_TC
+        # f = self._files
+        # iocs=''
 
-        for i in f:
-            logger.debug(f"URL DOWNLOAD: {i['url_private_download']}")
-            res = req.get(i['url_private_download'], headers={'Authorization': f'Bearer {environment.TOKEN}'})
-            if not res.ok:
-                responses.send_failure(self._channel)
-                return
+        # for i in f:
+        #     logger.debug(f"URL DOWNLOAD: {i['url_private_download']}")
+        #     res = req.get(i['url_private_download'], headers={'Authorization': f'Bearer {environment.TOKEN}'})
+        #     if not res.ok:
+        #         responses.send_failure(self._channel)
+        #         return
 
-            if res.text not in iocs:
-                iocs += res.text
-        ioc_array = iocs.split('\n')
-        if len(ioc_array)>100:
-            responses.send_message_to_slack(self._channel, 'Due to limitations at the current time, we are only allowing 100 IOCs to be pushed at once. Sorry for the inconvience.')
-            return
-        logger.debug(f'Attempting to submit {str(len(ioc_array))} IOCS...')
-        responses.send_ioc_count(self._channel,len(ioc_array))
-        count=0
+        #     if res.text not in iocs:
+        #         iocs += res.text
+        # ioc_array = iocs.split('\n')
+        # if len(ioc_array)>100:
+        #     responses.send_message_to_slack(self._channel, 'Due to limitations at the current time, we are only allowing 100 IOCs to be pushed at once. Sorry for the inconvience.')
+        #     return
+        # logger.debug(f'Attempting to submit {str(len(ioc_array))} IOCS...')
+        # responses.send_ioc_count(self._channel,len(ioc_array))
+        # count=0
 
-        for i in ioc_array:
-            # res = req.post(tc_url, data=i)
-            # logger.debug(f"Result status code: {res.status_code}")
-            # if not res.ok:
-            #     logger.debug(f'Upload Failure:\n {res.text}')
-            #     responses.send_failure(self._channel)
-                # return
-            count += 1
-            logger.debug(f'Uploaded: {i}')
-            # time.sleep(5)
+        # for i in ioc_array:
+        #     res = req.post(tc_url, data=i)
+        #     logger.debug(f"Result status code: {res.status_code}")
+        #     if not res.ok:
+        #         logger.debug(f'Upload Failure:\n {res.text}')
+        #         responses.send_failure(self._channel)
+        #         return
+        #     count += 1
+        #     logger.debug(f'Uploaded: {i}')
+        #     # time.sleep(5)
 
-        logger.debug(f'Number of IOCs submitted: {str(count)}')
-        responses.send_success_message(self._channel)
+        # logger.debug(f'Number of IOCs submitted: {str(count)}')
+        # responses.send_success_message(self._channel)
 
 
     def _falsepositive(self):
