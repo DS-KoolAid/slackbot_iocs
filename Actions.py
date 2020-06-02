@@ -188,7 +188,7 @@ class Action:
 
         for i in ioc_array:
             res = req.post(tc_url, data=i)
-            logger.debug(f"Result status code: {res.status}")
+            logger.debug(f"Result status code: {res.status_code}")
             if not res.ok:
                 logger.debug(f'Upload Failure:\n {res.text}')
                 responses.send_failure(self._channel)
