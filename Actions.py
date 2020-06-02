@@ -143,8 +143,10 @@ class Action:
 
     def _addioc(self):
         tc_url = environment.DOMAIN_TC
-
+        count=0
         for ioc in self._command_arguments:
+            if "http" not in ioc and "hxxp" not in ioc:
+                continue
             if '[.]' in ioc:
                 ioc=ioc.replace('[.]','.')
 
@@ -153,10 +155,13 @@ class Action:
             logger.debug('IOC: '+ioc)
 
             res = req.post(tc_url, data=ioc)
+            count+=1
             if res.ok:
                 responses.send_success_message(self._channel)
             else:
                 responses.send_failure(self._channel)
+        if count==0:
+            responses.send_failure(self._channel)
 
 
     def _bulkadd(self):
@@ -167,13 +172,12 @@ class Action:
         for i in f:
             logger.debug(f"URL DOWNLOAD: {i['url_private_download']}")
             res = req.get(i['url_private_download'], headers={'Authorization': f'Bearer {environment.TOKEN}'})
-            if res.text not in iocs:
-                iocs += res.text
-
-            if res.ok:
+            if not res.ok:
                 responses.send_failure(self._channel)
                 return
 
+            if res.text not in iocs:
+                iocs += res.text
         ioc_array = iocs.split('\n')
         if len(ioc_array)>100:
             responses.send_message_to_slack(self._channel, 'Due to limitations at the current time, we are only allowing 100 IOCs to be pushed at once. Sorry for the inconvience.')
