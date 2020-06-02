@@ -195,7 +195,7 @@ class Action:
                 return
             count += 1
             logger.debug(f'Uploaded: {i}')
-            time.sleep(10)
+            time.sleep(5)
 
         logger.debug(f'Number of IOCs submitted: {str(count)}')
         responses.send_success_message(self._channel)
