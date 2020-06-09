@@ -165,7 +165,7 @@ class Action:
 
 
     def _bulkadd(self):
-        responses.send_message_to_slack(self._channel,'Sorry for the inconvience, this bot is going through an upgrade and this function is currently unavailable.')
+        # responses.send_message_to_slack(self._channel,'Sorry for the inconvience, this bot is going through an upgrade and this function is currently unavailable.')
         tc_url = environment.DOMAIN_TC
         f = self._files
         iocs=''
