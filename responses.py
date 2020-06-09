@@ -22,7 +22,7 @@ def send_failure(channel):
     slack_client.chat_postMessage(channel=channel,text='Error Occured, please try again')
 
 def send_ioc_count(channel,count):
-    slack_client.chat_postMessage(channel=channel,text=f'Attempting to submit {str(count)} IOCs')
+    slack_client.chat_postMessage(channel=channel,text=f'{str(count)} IOCs have been submitted to the submit queue. They will be to Threat Connect in the next 10 minutes.')
 
 
 def send_unknown(channel):
